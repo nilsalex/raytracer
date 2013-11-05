@@ -26,9 +26,18 @@ class Ray {
     Vector direction_;
 
   public:
+    Ray(void);
     Ray(Vector const& origin, Vector const& direction);
+    Ray(Ray const& ray);
     ~Ray(void);
-    Vector Evaluate(double const& t) const;
+
+    HitInfo hit_info;
+    Vector get_origin(void) const;
+    void set_origin(Vector const& origin);
+    Vector get_direction(void) const;
+    void set_direction(Vector const& direction);
+
+    Ray& operator= (Ray const& ray);
 }; 
 
 #endif
