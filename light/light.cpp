@@ -12,11 +12,11 @@ Light::Light(Light const& light)
 
 Light::~Light(void) {}
 
-void Light::set_point(Vector const& point) {
+void Light::set_position(Vector const& point) {
   point_ = point;
 }
 
-Vector Light::get_point(void) const {
+Vector Light::get_position(void) const {
   return point_;
 }
 

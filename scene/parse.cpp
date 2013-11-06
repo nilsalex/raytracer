@@ -23,7 +23,7 @@ char* Parse::ReadComment(int count, char *buffer) {
 }
 
 char* Parse::ReadDigits(int count, char *buffer, int ERROR_NUMBER, char *filename) {
-  char done = 0, sign = 0, digit = 0;
+  unsigned char done = 0, sign = 0, digit = 0;
   char temp_buf[1024];
 
   Digit.n = 0;
@@ -69,7 +69,7 @@ char* Parse::ReadDigits(int count, char *buffer, int ERROR_NUMBER, char *filenam
               break;
             case ',':
               if (Digit.n > 3) {
-                fprintf(stdout, "\nScene::ReadDigits: [%s] More values than expected in file %s\n", tempBuf, filename);
+                fprintf(stdout, "\nScene::ReadDigits: [%s] More values than expected in file %s\n", temp_buf, filename);
                 Digit.v[0] = Digit.v[1] = Digit.v[2] = 0;
                 ERROR_NUMBER = 101;
                 break;
@@ -104,7 +104,7 @@ char* Parse::ReadDigits(int count, char *buffer, int ERROR_NUMBER, char *filenam
     }
   }
   if (Digit.n == 0) {
-    fprintf(stdout, "\nScene::ReadDigits: [%s] Error reading digits in file %s\n", tempBuf, filename);
+    fprintf(stdout, "\nScene::ReadDigits: [%s] Error reading digits in file %s\n", temp_buf, filename);
     Digit.v[0] = Digit.v[1] = Digit.v[2] = 0;
     ERROR_NUMBER = 101;
   }

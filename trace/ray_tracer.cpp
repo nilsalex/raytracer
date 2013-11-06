@@ -6,7 +6,7 @@ RayTracer::RayTracer(Scene *scene) {
 
 RayTracer::~RayTracer(void) {}
 
-bool RayTracer::RayTrace(Ray &ray, RGBColour &colour, double &t, double const& coef, double const& depth) {
+bool RayTracer::RayTrace(Ray &ray, RGBColour &colour, double &t, double const& coef, int const& depth) {
 
   // Check for collisions
 
@@ -30,5 +30,8 @@ bool RayTracer::RayTrace(Ray &ray, RGBColour &colour, double &t, double const& c
   Material *material = object_hit->get_material();
 
   colour = material->get_colour();
+
+  fprintf(stdout, "%.2f, %.2f, %.2f\n", colour.get_red(), colour.get_green(), colour.get_blue());
+
   return true;
 }

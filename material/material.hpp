@@ -14,7 +14,7 @@ class Material {
 
   public:
     Material(void);
-    ~Material(void);
+    virtual ~Material(void);
 
     double get_gloss(void) const;
     void set_gloss(double const& gloss);

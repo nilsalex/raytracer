@@ -22,9 +22,9 @@ class Sphere : public Shape {
     Vector get_center(void) const;
     void set_radius(double const& radius);
     double get_radius(void) const;
-    const void set_position(double const& X, double const& Y, double const& Z);
-    const Vector get_position(void) const;
-    const bool Hit(Ray &ray, double &t) const;
+    void set_position(double const& X, double const& Y, double const& Z);
+    Vector get_position(void) const;
+    bool Hit(Ray &ray, double &t) const;
 };
 
 #endif

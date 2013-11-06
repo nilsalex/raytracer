@@ -1,0 +1,575 @@
+!------------------------------------------------------------------
+!
+! - First comes the definition of Scene
+!   and then Materials
+! - The color of material range from 0 - 1
+! - After that shapes (like sphere and
+!   planes etc) and lights can be defined
+!   anywhere
+! - The color of light range from 0 - 1
+! - Spaces between digits are ignored
+! - An elliptic path can be defined
+!   Details are given below for path definition
+!
+! RESTRIONS:
+!
+! Only Transparency is enough, no need for
+! RefractionIn and RefractionOut:
+!
+! Number of Planes only 1 just as a untransparent back wall
+!
+!
+! SAMPLE SCENE.TXT FILE DEFINING A CHLORINE ATOM
+!
+!
+!------------------------------------------------------------------
+
+!-----------------------------------------
+!                Scene
+!-----------------------------------------
+Scene
+{
+  ! Version
+  Version = 1;
+  ! Output image dimension with background color
+  Width = 1024;
+  Height = 768;
+  BGColor = 0.1, 0.1, 0.1;
+  ! Viewtypes:
+  ! Orthographic = 0
+  ! Perspective = 1
+  ! Any other number should be changed to default
+  ViewType = 1;
+  ! Zoom ranges from 0.0 and up where
+  ! 0.0 --> nothing
+  ! 1.0 --> no zoom
+  ! 2.0 --> double the size
+  ! 0.5 --> half the size
+  Zoom = 1.0;
+  Gamma = 1.5;
+
+  ! Count the number of objects in the scene
+  NumberOfMaterials = 6;
+  NumberOfPaths = 3;
+  NumberOfSpheres = 52;
+  NumberOfPlanes = 1;
+  NumberOfLights = 3;
+}
+
+!-----------------------------------------
+!            List of materials
+!-----------------------------------------
+Material
+{
+  Reflection = 0.0;
+!  RefractionIn = 1.0;
+!  RefractionOut = 1.0;
+  Transparency = 0.0;
+  Color = 1.0, 1.0, 0.0;
+}
+
+Material
+{
+  Reflection = 0.0;
+  Transparency = 0.0;
+  Color = 0.0, 1.0, 1.0;
+}
+
+Material
+{
+  Reflection = 0.3;
+  Transparency = 1.0;
+  Color = 1.0, 0.0, 1.0;
+}
+
+Material
+{
+  Reflection = 0.3;
+  Transparency = 1.0;
+  Color = 0.3, 0.3, 1.0;
+}
+
+! Material for the plane as back wall
+! Transparency will always be taken as 0
+Material
+{
+  Reflection = 0.0;
+  Transparency = 0.0;
+  Color = 0.5, 0.5, 0.5;
+}
+
+Material
+{
+  Reflection = 0.3;
+  Transparency = 1.0;
+  Color = 0.3, 1.0, 0.3;
+}
+
+! Elliptic path for sphere animation
+! Rotate (RotationAxis) along X(1) or Y(2) or Z(3) axis
+! Major and minor axises are the major and minor radii
+! Angle in degrees the object is going to rotate along the RotationAxis
+! Rotation is the length of the path in degrees.
+! 1.0 Rotation is a full cycle (360 degrees) and so on
+Path
+{
+  Step = 5;
+  MajorAxis = 150.0;
+  MinorAxis = 150.0;
+  RotationAxis = 1;
+  Angle = 0.0;
+  Rotations = 3.0;
+}
+
+Path
+{
+  Step = 5;
+  MajorAxis = 250.0;
+  MinorAxis = 250.0;
+  RotationAxis = 1;
+  Angle = 90.0;
+  Rotations = 3.0;
+}
+
+Path
+{
+  Step = 5;
+  MajorAxis = 330.0;
+  MinorAxis = 330.0;
+  RotationAxis = 2;
+  Angle = 45.0;
+  Rotations = 3.0;
+}
+
+!-----------------------------------------
+!         Plane as a back wall
+!-----------------------------------------
+Plane
+{
+  Point = 0.0, 0.0, 800.0;
+  NormalVector = 0.0, 0.0, 1.0;
+  Material.Id = 4;
+}
+
+!-----------------------------------------
+!            List of spheres
+!-----------------------------------------
+! -----------------------------
+!          17 Neutrons
+! -----------------------------
+Sphere
+{
+  Center = 512.0, 384.0, 30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 442.0, 384.0, 30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 582.0, 384.0, 30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 477.0, 454.0, 30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 547.0, 454.0, 30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 477.0, 314.0, 30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 547.0, 314.0, 30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 512.0, 413.0, -90.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 512.0, 355.0, -60.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 477.0, 418.0, -30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 547.0, 418.0, -30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 477.0, 350.0, -30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 547.0, 350.0, -30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 434.0, 384.0, -90.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 590.0, 384.0, -90.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 512.0, 454.0, 90.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 512.0, 314.0, 90.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+
+! -----------------------------
+!          18 Protons
+! -----------------------------
+Sphere
+{
+  Center = 477.0, 384.0, 90.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 547.0, 384.0, 90.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 572.0, 414.0, 90.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 452.0, 414.0, 90.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 572.0, 354.0, 90.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 452.0, 354.0, 90.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 562.0, 445.0, -100.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 512.0, 475.0, -100.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 462.0, 445.0, -100.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 560.0, 325.0, -100.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 512.0, 285.0, 0.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 464.0, 325.0, -100.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 434.0, 435.0, 120.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 590.0, 435.0, 120.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 434.0, 332.0, 120.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 590.0, 332.0, 120.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 562.0, 485.0, 120.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 462.0, 485.0, 120.0;
+  Radius = 30.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+
+! -----------------------------
+!          17 Electrons
+! -----------------------------
+Sphere
+{
+  Center = 662.0, 384.0, 0.0;
+  Radius = 15.0;
+  Material.Id = 3;
+  Path.Id = 0;
+  ! The starting angle with on the path
+  StartAngle = 0.0;
+}
+
+Sphere
+{
+  Center = 362.0, 384.0, 0.0;
+  Radius = 15.0;
+  Material.Id = 3;
+  Path.Id = 0;
+  StartAngle = 180.0;
+}
+
+Sphere
+{
+  Center = 762.00, 384.00, 0.00;
+  Radius = 15.00;
+  Material.Id = 5;
+  Path.Id = 1;
+  StartAngle = 0.00;
+}
+Sphere
+{
+  Center = 688.78, 384.00, 176.78;
+  Radius = 15.00;
+  Material.Id = 5;
+  Path.Id = 1;
+  StartAngle = 45.00;
+}
+Sphere
+{
+  Center = 512.00, 384.00, 250.00;
+  Radius = 15.00;
+  Material.Id = 5;
+  Path.Id = 1;
+  StartAngle = 90.00;
+}
+Sphere
+{
+  Center = 335.22, 384.00, 176.78;
+  Radius = 15.00;
+  Material.Id = 5;
+  Path.Id = 1;
+  StartAngle = 135.00;
+}
+Sphere
+{
+  Center = 262.00, 384.00, 0.00;
+  Radius = 15.00;
+  Material.Id = 5;
+  Path.Id = 1;
+  StartAngle = 180.00;
+}
+Sphere
+{
+  Center = 335.22, 384.00, -176.78;
+  Radius = 15.00;
+  Material.Id = 5;
+  Path.Id = 1;
+  StartAngle = 225.00;
+}
+Sphere
+{
+  Center = 512.00, 384.00, -250.00;
+  Radius = 15.00;
+  Material.Id = 5;
+  Path.Id = 1;
+  StartAngle = 270.00;
+}
+Sphere
+{
+  Center = 688.78, 384.00, -176.78;
+  Radius = 15.00;
+  Material.Id = 5;
+  Path.Id = 1;
+  StartAngle = 315.00;
+}
+Sphere
+{
+  Center = 842.00, 384.00, 0.00;
+  Radius = 15.00;
+  Material.Id = 2;
+  Path.Id = 2;
+  StartAngle = 0.00;
+}
+Sphere
+{
+  Center = 754.14, 642.00, -87.86;
+  Radius = 15.00;
+  Material.Id = 2;
+  Path.Id = 2;
+  StartAngle = 51.43;
+}
+Sphere
+{
+  Center = 556.73, 705.73, -285.27;
+  Radius = 15.00;
+  Material.Id = 2;
+  Path.Id = 2;
+  StartAngle = 102.86;
+}
+Sphere
+{
+  Center = 398.42, 527.18, -443.58;
+  Radius = 15.00;
+  Material.Id = 2;
+  Path.Id = 2;
+  StartAngle = 154.29;
+}
+Sphere
+{
+  Center = 398.42, 240.82, -443.58;
+  Radius = 15.00;
+  Material.Id = 2;
+  Path.Id = 2;
+  StartAngle = 205.71;
+}
+Sphere
+{
+  Center = 556.73, 62.27, -285.27;
+  Radius = 15.00;
+  Material.Id = 2;
+  Path.Id = 2;
+  StartAngle = 257.14;
+}
+Sphere
+{
+  Center = 754.14, 126.00, -87.86;
+  Radius = 15.00;
+  Material.Id = 2;
+  Path.Id = 2;
+  StartAngle = 308.57;
+}
+
+!-----------------------------------------
+!         List of lights
+!-----------------------------------------
+! Center middle
+Light
+{
+  Position = 512.0, 384.0, -1000.0;
+  Color = 0.5, 0.5, 0.5;
+}
+
+! Top middle
+Light
+{
+  Position = 512.0, 768.0, -1000.0;
+  Color = 0.3, 0.3, 0.3;
+}
+
+! Center middle
+Light
+{
+  Position = 512.0, 384.0, 1000.0;
+  Color = 0.2, 0.2, 0.2;
+}

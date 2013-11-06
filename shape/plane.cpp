@@ -6,7 +6,7 @@ Plane::Plane(void)
 Plane::Plane(Vector const& point, Vector const& normal)
   : Shape(), point_(point), normal_(normal) {
   if (get_material()->get_transparency() > 0.0) {
-    get_material->set_transparency(0.0);
+    get_material()->set_transparency(0.0);
   }
 }
 
@@ -31,16 +31,16 @@ Vector Plane::get_normal_vector(void) const {
   return normal_;
 }
 
-const void Plane::set_position(double const& X, double const& Y, double const& Z) {
+void Plane::set_position(double const& X, double const& Y, double const& Z) {
   set_point(Vector(X, Y, Z));
 }
 
-const Vector Plane::get_position(void) const {
+Vector Plane::get_position(void) const {
   return point_;
 }
 
 
-bool const Plane::Hit(Ray &ray, double &t) const {
+bool Plane::Hit(Ray &ray, double &t) const {
   double d = ray.get_direction() * normal_;
   if (d <= 0.0) {
     return false;

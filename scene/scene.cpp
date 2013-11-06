@@ -8,9 +8,9 @@ Scene::Scene(char* filename) {
     file_ = fopen (filename, "r");
     if (file_ == NULL) {
       fprintf (stderr, "Can't open the file %s\n", filename);
-      error_number = 101;
+      error_number_ = 101;
     } else {
-      Scene::filename = filename;
+      Scene::filename_ = filename;
       error_number_ = 0;
       version_ = 0;
       width_ = 0;
@@ -46,7 +46,7 @@ int Scene::Read(void) {
     return count_;
   }
 
-  int size, temp;
+  int size;
   char *buffer, temp_buf[1024];
 
   fseek (file_, 0L, SEEK_END);
@@ -63,14 +63,14 @@ int Scene::Read(void) {
       case '!':
         count_++;
         buffer++;
-        buffer = parse->ReadComment (count_, buffer);
+        buffer = parse_->ReadComment (count_, buffer);
         break;
       case 'S':
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
         if (!strcmp(temp_buf, "Scene") && !scene_read_) {
-          buffer = ReadScene(buffer);
+          buffer = ReadScene_(buffer);
           scene_read_ = 1;
           sphere_ = new Sphere[number_of_spheres_];
           plane_ = new Plane[number_of_planes_];
@@ -79,7 +79,7 @@ int Scene::Read(void) {
 //        path_ = new Path[number_of_paths_];
           light_ = new Light[number_of_lights_];
         } else if (scene_read_ && material_read_ == number_of_materials_ && !strcmp(temp_buf, "Sphere") && sphere_read_ < number_of_spheres_) {
-          buffer = ReadSphere(buffer);
+          buffer = ReadSphere_(buffer);
           sphere_read_++;
           shape_read_++;
         }
@@ -91,7 +91,7 @@ int Scene::Read(void) {
         if (scene_read_ && material_read_ == number_of_materials_) {
           // Path...
           if (!strcmp(temp_buf, "Plane") && plane_read_ < number_of_planes_) {
-            buffer = ReadPlane(buffer);
+            buffer = ReadPlane_(buffer);
             plane_read_++;
             shape_read_++;
           }
@@ -102,7 +102,7 @@ int Scene::Read(void) {
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
         if (scene_read_ && !strcmp(temp_buf, "Light") && light_read_ < number_of_lights_) {
-          buffer = ReadLight(buffer);
+          buffer = ReadLight_(buffer);
           light_read_++;
         }
         break;
@@ -111,7 +111,7 @@ int Scene::Read(void) {
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
         if (scene_read_ && !strcmp(temp_buf, "Material") && material_read_ < number_of_materials_) {
-          buffer = ReadMaterial(buffer);
+          buffer = ReadMaterial_(buffer);
           material_read_++;
           if (material_read_ == number_of_materials_) {
             material_ -= number_of_materials_;
@@ -155,7 +155,7 @@ int Scene::Read(void) {
   return count_;
 }
 
-char* Scene::ReadScene(char *buffer) {
+char* Scene::ReadScene_(char *buffer) {
   char temp_buf[1024];
   char start = 0, done = 0;
   while (1) {
@@ -169,7 +169,7 @@ char* Scene::ReadScene(char *buffer) {
         count_++;
         buffer++;
         if (start != 1) {
-          fprintf(stdout, "\nSyntax Error: Missing '{' in Component 'Scene' in file %s\n", filename);
+          fprintf(stdout, "\nSyntax Error: Missing '{' in Component 'Scene' in file %s\n", filename_);
           error_number_ = 101;
         }
         done = 1;
@@ -181,9 +181,9 @@ char* Scene::ReadScene(char *buffer) {
         break;
       case 'V':
         sscanf(buffer, "%s", temp_buf);
-        count += strlen(temp_buf);
+        count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Version")) {
           version_ = parse_->Digit.v[0];
         } else if (!strcmp(temp_buf, "ViewType")) {
@@ -197,7 +197,7 @@ char* Scene::ReadScene(char *buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Width")) {
           width_ = parse_->Digit.v[0];
         }
@@ -206,7 +206,7 @@ char* Scene::ReadScene(char *buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Height")) {
           height_ = parse_->Digit.v[0];
         }
@@ -215,7 +215,7 @@ char* Scene::ReadScene(char *buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "BGColour")) {
           bgcolour_ = RGBColour(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]);
         }
@@ -224,11 +224,11 @@ char* Scene::ReadScene(char *buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Zoom")) {
           zoom_ = parse_->Digit.v[0];
           if (zoom_ < 0.0) {
-            fprintf(stdout, "\nZoom Error: The zoom number should not be less than '0' in Component 'Scene' in file %s\n", filename);
+            fprintf(stdout, "\nZoom Error: The zoom number should not be less than '0' in Component 'Scene' in file %s\n", filename_);
             error_number_ = 101;
           }
         }
@@ -237,11 +237,11 @@ char* Scene::ReadScene(char *buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Gamma")) {
           gamma_ = parse_->Digit.v[0];
           if (gamma_ < 0.0) {
-            fprintf(stdout, "\nGamma Error: The gamma number should not be less than '0' in Component 'Scene' in file %s\n", filename);
+            fprintf(stdout, "\nGamma Error: The gamma number should not be less than '0' in Component 'Scene' in file %s\n", filename_);
             error_number_ = 101;
           }
         }
@@ -250,7 +250,7 @@ char* Scene::ReadScene(char *buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, fiilename)
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "NumberOfMaterials")) {
           number_of_materials_ = parse_->Digit.v[0];
         } else if (!strcmp(temp_buf, "NumberOfSpheres")) {
@@ -274,19 +274,19 @@ char* Scene::ReadScene(char *buffer) {
   return buffer;
 }
 
-char* Scene::ReadSphere(char *buffer) {
+char* Scene::ReadSphere_(char *buffer) {
   char temp_buf[1024];
-  char n = 0, start = 0, done = 0;
+  char start = 0, done = 0;
   while (1) {
     switch (*buffer) {
       case '!':
-        buffer = parse->ReadComment(count_, buffer);
+        buffer = parse_->ReadComment(count_, buffer);
         break;
       case '}':
         count_++;
         buffer++;
         if (start != 1) {
-          fprintf(stdout, "\nScene::ReadSphere: Syntax Error: Missing '{' in Component 'Sphere' in file %s\n", filename);
+          fprintf(stdout, "\nScene::ReadSphere_: Syntax Error: Missing '{' in Component 'Sphere' in file %s\n", filename_);
           error_number_ = 101;
         }
         done = 1;
@@ -302,7 +302,7 @@ char* Scene::ReadSphere(char *buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Center")) {
           sphere_->set_center(Vector(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]));
         }
@@ -311,7 +311,7 @@ char* Scene::ReadSphere(char *buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Radius")) {
           sphere_->set_radius(parse_->Digit.v[0]);
         }
@@ -320,17 +320,17 @@ char* Scene::ReadSphere(char *buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Material.Id")) {
           int value = int(parse_->Digit.v[0]);
           material_ += value;
           if (value >= number_of_materials_) {
-            fprintf(stdout, "\nScene::ReadSphere: Error: Wrong material ID in Component 'Sphere' in file %s\n", filename);
+            fprintf(stdout, "\nScene::ReadSphere_: Error: Wrong material ID in Component 'Sphere' in file %s\n", filename_);
             error_number_ = 101;
           } else {
             sphere_->set_material(material_);
           }
-          material -= value;
+          material_ -= value;
         }
         break;
 // Path!
@@ -338,7 +338,7 @@ char* Scene::ReadSphere(char *buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "StartAngle")) {
           sphere_->set_start_angle(parse_->Digit.v[0]);
         }
@@ -356,9 +356,9 @@ char* Scene::ReadSphere(char *buffer) {
   return buffer;
 }
 
-char* Scene::ReadPlane(char* buffer) {
+char* Scene::ReadPlane_(char* buffer) {
   char temp_buf[1024];
-  char n = 0, start = 0, done = 0;
+  char start = 0, done = 0;
   while (1) {
     switch (*buffer) {
       case '!':
@@ -368,7 +368,7 @@ char* Scene::ReadPlane(char* buffer) {
         count_++;
         buffer++;
         if (start != 1) {
-          fprintf(stdout, "\nScene::ReadPlane: Syntax Error: Missing '{' in Component 'Plane' in file %s\n" filename);
+          fprintf(stdout, "\nScene::ReadPlane_: Syntax Error: Missing '{' in Component 'Plane' in file %s\n", filename_);
           error_number_ = 101;
         }
         done = 1;
@@ -384,7 +384,7 @@ char* Scene::ReadPlane(char* buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Point")) {
           plane_->set_point(Vector(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]));
         }
@@ -393,7 +393,7 @@ char* Scene::ReadPlane(char* buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "NormalVector")) {
           plane_->set_normal_vector(Vector(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]));
         }
@@ -402,17 +402,17 @@ char* Scene::ReadPlane(char* buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Material.Id")) {
           int value = int(parse_->Digit.v[0]);
           material_ += value;
           if (value >= number_of_materials_) {
-            fprintf(stdout, "\nScene::ReadPlane: Error: Wrong material ID in Component 'Plane' in file %s\n", filename);
+            fprintf(stdout, "\nScene::ReadPlane_: Error: Wrong material ID in Component 'Plane' in file %s\n", filename_);
             error_number_ = 101;
           } else {
             plane_->set_material(material_);
           }
-          material -= value;
+          material_ -= value;
         }
         break;
       default:
@@ -428,9 +428,9 @@ char* Scene::ReadPlane(char* buffer) {
   return buffer;
 }
 
-char* Scene::ReadLight(char* buffer) {
+char* Scene::ReadLight_(char* buffer) {
   char temp_buf[1024];
-  char n = 0, start = 0, done = 0;
+  char start = 0, done = 0;
   while (1) {
     switch (*buffer) {
       case '!':
@@ -440,12 +440,11 @@ char* Scene::ReadLight(char* buffer) {
         count_++;
         buffer++;
         if (start != 1) {
-          fprintf(stdout, "\nScene::ReadLight: Syntax Error: Missing '{' in Component 'Light' in file %s\n" filename);
+          fprintf(stdout, "\nScene::ReadLight_: Syntax Error: Missing '{' in Component 'Light' in file %s\n", filename_);
           error_number_ = 101;
         }
         done = 1;
-        objects[shape_read_] = (int *)plane_;
-        plane_++;
+        light_++;
         break;
       case '{':
         count_++;
@@ -456,7 +455,7 @@ char* Scene::ReadLight(char* buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Position")) {
           light_->set_position(Vector(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]));
         }
@@ -465,7 +464,7 @@ char* Scene::ReadLight(char* buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Colour")) {
           light_->set_colour(RGBColour(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]));
         }
@@ -483,9 +482,9 @@ char* Scene::ReadLight(char* buffer) {
   return buffer;
 }
 
-char* Scene::ReadMaterial(char* buffer) {
+char* Scene::ReadMaterial_(char* buffer) {
   char temp_buf[1024];
-  char n = 0, start = 0, done = 0;
+  char start = 0, done = 0;
   while (1) {
     switch (*buffer) {
       case '!':
@@ -495,12 +494,11 @@ char* Scene::ReadMaterial(char* buffer) {
         count_++;
         buffer++;
         if (start != 1) {
-          fprintf(stdout, "\nScene::ReadMaterial: Syntax Error: Missing '{' in Component 'Material' in file %s\n" filename);
+          fprintf(stdout, "\nScene::ReadMaterial_: Syntax Error: Missing '{' in Component 'Material' in file %s\n", filename_);
           error_number_ = 101;
         }
         done = 1;
-        objects[shape_read_] = (int *)plane_;
-        plane_++;
+        material_++;
         break;
       case '{':
         count_++;
@@ -511,7 +509,7 @@ char* Scene::ReadMaterial(char* buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Reflection")) {
           material_->set_reflection(parse_->Digit.v[0]);
         } else if (!strcmp(temp_buf, "RefractionIn")) {
@@ -524,7 +522,7 @@ char* Scene::ReadMaterial(char* buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Transparency")) {
           material_->set_transparency(parse_->Digit.v[0]);
         }
@@ -533,7 +531,7 @@ char* Scene::ReadMaterial(char* buffer) {
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
-        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
         if (!strcmp(temp_buf, "Colour")) {
           material_->set_colour(RGBColour(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]));
         }
@@ -583,7 +581,7 @@ RGBColour Scene::get_bgcolour(void) const {
 }
 
 int Scene::get_number_of_shapes(void) const {
-  return number_of_shapes_;
+  return (number_of_spheres_ + number_of_planes_);
 }
 
 int Scene::get_number_of_spheres(void) const {
@@ -618,7 +616,7 @@ void Scene::set_zoom(double const& zoom) {
   zoom_ = zoom;
 }
 
-void Scene::print(void) const {
+void Scene::Print(void) const {
   fprintf (stdout, "\nVersion            = %5d\n", version_);
   fprintf (stdout, "Width              = %5d\n", width_);
   fprintf (stdout, "Height             = %5d\n", height_);

@@ -13,13 +13,13 @@ class TGA : public Image {
     };
     Colour *colour_;
     int bitmap_, type_, rows_, cols_, count_;
-    int getline_(FILE const *file, char line[]) const;
+    int getline_(FILE *file, char line[]) const;
 
   public:
-    TGA(int const& bitmap, int const& type, int const& rowsp, int const& colsp);
+    TGA(int const& bitmap, int const& type, int const& rowsp, int const& colsp, int const& count = 0);
     ~TGA(void);
-    void Read(char const* filename) const;
-    void Write(char const* filename);
+//    void Read(char const* filename) const;
+    void Write(char const* filename) const;
     void set_colour(int const& r, int const& g, int const& b);
 };
 

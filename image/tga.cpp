@@ -1,18 +1,18 @@
 #include "image/tga.hpp"
 
-TGA::TGA(int const& bitmap, int const& type, int const& rows, int const& cols)
-  : bitmap_(bitmap), type_(type), rows_(rows), cols_(cols), count_(0),
-    colour(new Colour(rows * cols)) {}
+TGA::TGA(int const& bitmap, int const& type, int const& rows, int const& cols, int const& count)
+  : colour_(new Colour[rows * cols]),
+    bitmap_(bitmap), type_(type), rows_(rows), cols_(cols), count_(count) {}
 
 TGA::~TGA(void) {
-  delete colour;
+  delete colour_;
 }
 
-void TGA::Read(char const* filename) const {
-  fprintf(stdout, "TGA::Read: Not yet implemented\n");
-}
+//void TGA::Read(char const* filename) const {
+//  fprintf(stdout, "TGA::Read: Not yet implemented\n");
+//}
 
-void TGA::Write(char const* filename) {
+void TGA::Write(char const* filename) const {
   FILE *file = fopen(filename, "wb");
 
   if (file == NULL) {
@@ -36,16 +36,16 @@ void TGA::Write(char const* filename) {
 
 void TGA::set_colour(int const& r, int const& g, int const& b) {
   if (count_ < rows_*cols_) {
-    colour[count_].red = r;
-    colour[count_].green = g;
-    colour[count_].blue = b;
+    colour_[count_].red = r;
+    colour_[count_].green = g;
+    colour_[count_].blue = b;
     count_++;
   } else {
     fprintf(stderr, "Error writing colours: count_: %7d 3*rows_*cols_: %7d\n", count_, rows_*cols_);
   }
 }
 
-int TGA::getline(FILE const* file, char line[]) const {
+int TGA::getline_(FILE* file, char line[]) const {
   int i = 0;
   while (1) {
     line[i] = getc(file);

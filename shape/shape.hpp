@@ -6,7 +6,7 @@
 #include "material/material.hpp"
 //#include "path/path.h"
 
-#define SHAPE_EPSILON
+#define SHAPE_EPSILON 0.1
 
 class Shape {
   private:
@@ -22,7 +22,7 @@ class Shape {
     Shape(Shape const& shape);
     virtual ~Shape(void);
 
-    void set_material(Material const* material);
+    void set_material(Material* material);
     Material* get_material(void) const;
 
 //  void set_path(path const* path);
@@ -34,9 +34,9 @@ class Shape {
 //  bool HasPath(void) const;
 //  bool HasPathData(void) const;
 
-    virtual const void set_position(double const& X, double const& Y, double const& Z) = 0;
-    virtual const Vector get_position(void) = 0;
-    virtual const bool Hit(Ray &ray, double &t) = 0;
+    virtual void set_position(double const& X, double const& Y, double const& Z) = 0;
+    virtual Vector get_position(void) const = 0;
+    virtual bool Hit(Ray &ray, double &t) const = 0;
 };
 
 #endif

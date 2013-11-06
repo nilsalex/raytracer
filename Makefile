@@ -1,8 +1,8 @@
-CXX = g++
-OPT = -O2 -march=corei7
+CXX = g++-mp-4.8
+OPT = -ggdb -march=core2
 CFLAGS = $(OPT) -Wall -Wextra -pedantic -std=gnu++0x
 LDFLAGS =
-INCLUDE = -I.
+INCLUDE = -I. 
 
 _OBJECTS = main.o world.o ray_tracer.o scene.o sphere.o plane.o shape.o light.o vector.o ray.o rgb_colour.o material.o tga.o parse.o
 OBJECTS = $(patsubst %,$(ODIR)/%,$(_OBJECTS))
@@ -33,20 +33,20 @@ scene.o:
 	$(CXX) -c $(CFLAGS) $(INCLUDE) $< -o $(ODIR)/$@ $(SDIR)/scene/scene.cpp
 
 sphere.o:
-	mkdir -o $(ODIR)
+	mkdir -p $(ODIR)
 	$(CXX) -c $(CFLAGS) $(INCLUDE) $< -o $(ODIR)/$@ $(SDIR)/shape/sphere.cpp
 
 plane.o:
-	mkdir -o $(ODIR)
+	mkdir -p $(ODIR)
 	$(CXX) -c $(CFLAGS) $(INCLUDE) $< -o $(ODIR)/$@ $(SDIR)/shape/plane.cpp
 
 shape.o:
 	mkdir -p $(ODIR)
-	$(CXX) -c $(CFLAGS) $(INCLUDE) $< -o $(ODIR)/$@ $(DIR)/shape/shape.cpp
+	$(CXX) -c $(CFLAGS) $(INCLUDE) $< -o $(ODIR)/$@ $(SDIR)/shape/shape.cpp
 
 light.o:
 	mkdir -p $(ODIR)
-	$(CXX) -c $(CFLAGS) $(INCLUDE) $< -o $(ODIR)/$@ $(DIR)/light/light.cpp
+	$(CXX) -c $(CFLAGS) $(INCLUDE) $< -o $(ODIR)/$@ $(SDIR)/light/light.cpp
 
 vector.o:
 	mkdir -p $(ODIR)

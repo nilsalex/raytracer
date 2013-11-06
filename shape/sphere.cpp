@@ -27,15 +27,15 @@ double Sphere::get_radius(void) const {
   return radius_;
 }
 
-void const Sphere::set_position(double const& X, double const& Y, double const& Z) {
+void Sphere::set_position(double const& X, double const& Y, double const& Z) {
   set_center(Vector(X, Y, Z));
 }
 
-Vector const Sphere::get_position(void) const {
+Vector Sphere::get_position(void) const {
   return center_;
 }
 
-const bool Sphere::Hit(Ray &ray, double &t) const {
+bool Sphere::Hit(Ray &ray, double &t) const {
   Vector dist = ray.get_origin() - center_;
   double a = ray.get_direction() * ray.get_direction();
   double b = ray.get_direction() * dist * 2.0;
@@ -57,7 +57,7 @@ const bool Sphere::Hit(Ray &ray, double &t) const {
 
     if (is_hit) {
       ray.hit_info.position = ray.get_origin() + (ray.get_direction() * t);
-      Vector normal = ray.hit_info.position - center;
+      Vector normal = ray.hit_info.position - center_;
       double temp = normal * normal;
       if (temp <= 0.0) {
         is_hit = false;

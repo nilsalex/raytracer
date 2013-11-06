@@ -3,8 +3,9 @@
 
 class Image {
   public:
-    virtual void Read(char const *filename) = 0;
-    virtual void Write(char const *filename) = 0;
+    virtual ~Image(void) {};
+//    virtual void Read(char const *filename) const = 0;
+    virtual void Write(char const *filename) const = 0;
     virtual void set_colour(int const& r, int const& g, int const& b) = 0;
 };
 

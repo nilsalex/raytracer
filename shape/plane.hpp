@@ -20,8 +20,8 @@ class Plane : public Shape {
     Vector get_point(void) const;
     void set_normal_vector(Vector const& v);
     Vector get_normal_vector(void) const;
-    void const set_position(double const& X, double const& Y, double const& Z);
-    Vector const get_position(void) const;
+    void set_position(double const& X, double const& Y, double const& Z);
+    Vector get_position(void) const;
     bool Hit(Ray &ray, double &t) const;
 };
 

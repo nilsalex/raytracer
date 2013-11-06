@@ -16,7 +16,7 @@ class World {
 
     int Build(char* filename);
     bool RenderScene(char* filename);
-//    bool RenderAnimation(char const* dir);
+//    bool RenderAnimation(char* dir);
 };
 
 #endif

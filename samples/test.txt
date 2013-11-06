@@ -1,0 +1,108 @@
+!------------------------------------------------------------------
+!
+! - First comes the definition of Scene
+!   and then Materials
+! - The color of material range from 0 - 1
+! - After that shapes (like sphere and
+!   planes etc) and lights can be defined
+!   anywhere
+! - The color of light range from 0 - 1
+! - Spaces between digits are ignored
+!
+!------------------------------------------------------------------
+
+!-----------------------------------------
+!                Scene
+!-----------------------------------------
+Scene
+{
+  ! Version
+  Version = 1;
+  ! Output image dimension with background color
+  Width = 1024;
+  Height = 768;
+  BGColour = 0.1, 0.1, 0.1;
+  ! Viewtypes:
+  ! Orthographic = 0
+  ! Perspective = 1
+  ! Any other number should be changed to default
+  ViewType = 1;
+  ! Zoom ranges from 0.0 and up where
+  ! 0.0 --> nothing
+  ! 1.0 --> no zoom
+  ! 2.0 --> double the size
+  ! 0.5 --> half the size
+  Zoom = 1.0;
+  Gamma = 1.5;
+
+  ! Count the number of objects in the scene
+  NumberOfMaterials = 2;
+  NumberOfPlanes = 1;
+  NumberOfSpheres = 2;
+  NumberOfLights = 1;
+}
+
+!-----------------------------------------
+!            List of materials
+!-----------------------------------------
+Material
+{
+  Reflection = 0.3;
+!  RefractionIn = 1.0;
+!  RefractionOut = 1.0;
+  Transparency = 0.0;
+  Colour = 1.0, 1.0, 0.0;
+}
+
+Material
+{
+  Reflection = 0.2;
+!  RefractionIn = 1.0;
+!  RefractionOut = 1.0;
+  Transparency = 0.0;
+  Colour = 1.0, 1.0, 0.0;
+}
+
+!-----------------------------------------
+!         Plane as a back wall
+!-----------------------------------------
+Plane
+{
+  Point = 0.0, 0.0, 800.0;
+  NormalVector = 0.0, 0.0, 1.0;
+  Material.Id = 0;
+}
+
+!-----------------------------------------
+!            List of spheres
+!-----------------------------------------
+! -----------------------------
+!          17 Neutrons
+! -----------------------------
+Sphere
+{
+  Center = 212.0, 384.0, 30.0;
+  Radius = 40.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+
+Sphere
+{
+  Center = 512.0, 384.0, 30.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+
+!-----------------------------------------
+!         List of lights
+!-----------------------------------------
+
+! Top middle
+Light
+{
+  Position = 512.0, 768.0, -1000.0;
+  Colour = 0.3, 0.3, 0.3;
+}
+

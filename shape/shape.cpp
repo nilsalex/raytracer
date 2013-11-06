@@ -6,7 +6,7 @@ Shape::Shape(void)
 
 Shape::Shape(Shape const& shape) {
   if (shape.material_) {
-    material_ = shape.material;
+    material_ = shape.material_;
   } else {
     material_ = 0;
   }
@@ -21,7 +21,7 @@ Shape::~Shape(void) {
 // Path...
 }
 
-void Shape::set_material(Material const* material) {
+void Shape::set_material(Material *material) {
   material_ = material;
 }
 

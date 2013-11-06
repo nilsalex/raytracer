@@ -39,6 +39,7 @@ class Scene {
 
     int count_, error_number_;
     FILE *file_;
+    char *filename_;
     int shape_read_;
     int scene_read_, sphere_read_, plane_read_, light_read_, material_read_; // path_read_;
 
@@ -63,7 +64,7 @@ class Scene {
     double get_zoom(void) const;
     void set_zoom(double const& zoom);
     double get_gamma(void) const;
-    RGBColour get_bgcolour(void);
+    RGBColour get_bgcolour(void) const;
 
     int get_number_of_shapes(void) const;
     int get_number_of_spheres(void) const;
@@ -76,7 +77,7 @@ class Scene {
     Plane* get_planes(void);
     Light* get_lights(void);
 
-    void Print(void);
+    void Print(void) const;
 };
 
 #endif
