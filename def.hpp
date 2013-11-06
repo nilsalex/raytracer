@@ -12,4 +12,6 @@
 #define REFRACTION_OUT 1.25
 #define EPSILON 0.15
 
+#define DEBUG
+
 #endif

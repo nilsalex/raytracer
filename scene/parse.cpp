@@ -18,7 +18,6 @@ char* Parse::ReadComment(int count, char *buffer) {
       break;
     }
   }
-
   return buffer;
 }
 

@@ -1,0 +1,67 @@
+Scene
+{
+  Version = 1;
+  Width = 1024;
+  Height = 768;
+  BGColour = 0.01, 0.01, 0.01;
+  ViewType = 1;
+  Zoom = 1.0;
+  Gamma = 1.5;
+
+  NumberOfMaterials = 2;
+  NumberOfSpheres = 2; 
+  NumberOfLights = 4;
+}
+
+Material
+{
+  Reflection = 0.2;
+  Transparency = 0.8;
+  Colour = 1.0, 0.0, 0.0;
+}
+
+Material
+{
+  Reflection = 1.0;
+  Transparency = 0.0;
+  Colour = 0.0, 0.0, 1.0;
+}
+
+Sphere
+{
+  Center = 700.0, 450.0, -300.0;
+  Radius = 30.0;
+  Material.Id = 0;
+  StartAngle = 0.0;
+}
+Sphere
+{
+  Center = 400.0, 300.0, -100.0;
+  Radius = 100.0;
+  Material.Id = 1;
+  StartAngle = 0.0;
+}
+
+Light
+{
+  Position = 0.0, 768.0, 1000.0;
+  Colour = 1.0, 1.0, 1.0;
+}
+
+Light
+{
+  Position = 1024.0, 768.0, 1000;
+  Colour = 1.0, 1.0, 1.0;
+}
+
+Light
+{
+  Position = 0.0, 768.0, -1000.0;
+  Colour = 1.0, 1.0, 1.0;
+}
+
+Light
+{
+  Position = 1024.0, 768.0, -1000.0;
+  Colour = 1.0,1.00, 1.0;
+}

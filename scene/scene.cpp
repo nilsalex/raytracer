@@ -147,7 +147,7 @@ int Scene::Read(void) {
   }
 
   if (error_number_ > 0) {
-    fprintf(stdout, "SPHERES      %d, PLANES      %d, LIGHTS      %d, MATERIALS      %d", number_of_spheres_, number_of_planes_, number_of_lights_, number_of_materials_);
+    fprintf(stdout, "SPHERES      %d, PLANES      %d, LIGHTS      %d, MATERIALS      %d\n", number_of_spheres_, number_of_planes_, number_of_lights_, number_of_materials_);
     fprintf(stdout, "SPHERES_READ %d, PLANES_READ %d, LIGHTS_READ %d, MATERIALS_READ %d", sphere_read_, plane_read_, light_read_, material_read_);
     return -1;
   }

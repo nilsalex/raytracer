@@ -1,5 +1,5 @@
-CXX = g++-mp-4.8
-OPT = -ggdb -march=core2
+CXX = g++
+OPT = -ggdb -march=corei7
 CFLAGS = $(OPT) -Wall -Wextra -pedantic -std=gnu++0x
 LDFLAGS =
 INCLUDE = -I. 

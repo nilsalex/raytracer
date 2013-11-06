@@ -16,27 +16,52 @@ int World::Build(char* filename) {
     fprintf(stdout, "\nWorld::Build: Error Reading File %s\n", filename);
     return -1;
   } else {
-                Sphere *sphere = scene->get_spheres();
-                scene->Print();
-                fprintf (stdout, "\nSpheres:\n"); 
-                for (int i = 0; i < scene->get_number_of_spheres(); sphere++,i++) 
-                { 
-                        fprintf (stdout, " Sphere[%d]:\n", i); 
-                        Vector v = sphere->get_center(); 
-                        fprintf (stdout, "   Center:        %7.2f, %7.2f, %7.2f\n", v.get_x(), v.get_y(), v.get_z()); 
-                        fprintf (stdout, "   Radius:        %7.2f\n", sphere->get_radius()); 
-                        fprintf (stdout, "   StartAngle:    %7.2f\n", sphere->get_start_angle());
-                        Material *m = sphere->get_material();
-                        fprintf (stdout, "   Material:\n");
-                        fprintf (stdout, "      Reflection:    %7.2f\n", m->get_reflection());
-                        fprintf (stdout, "      RefractionIn:  %7.2f\n", m->get_refraction_in());
-                        fprintf (stdout, "      RefractionOut: %7.2f\n", m->get_refraction_out());
-                        fprintf (stdout, "      Transparency: %7.2f\n", m->get_transparency());
-                        RGBColour c = m->get_colour();
-                        fprintf (stdout, "      Color:         %7.2f, %7.2f, %7.2f\n", c.get_red(), c.get_green(), c.get_blue());
-                }
-
-
+#ifdef DEBUG
+    Sphere *sphere = scene->get_spheres();
+    Plane *plane = scene->get_planes();
+    Light *light = scene->get_lights();
+    scene->Print();
+    fprintf (stdout, "\nSpheres:\n"); 
+    for (int i = 0; i < scene->get_number_of_spheres(); sphere++,i++) { 
+      fprintf (stdout, " Sphere[%d]:\n", i); 
+      Vector v = sphere->get_center(); 
+      fprintf (stdout, "   Center:        %7.2f, %7.2f, %7.2f\n", v.get_x(), v.get_y(), v.get_z()); 
+      fprintf (stdout, "   Radius:        %7.2f\n", sphere->get_radius()); 
+      fprintf (stdout, "   StartAngle:    %7.2f\n", sphere->get_start_angle());
+      Material *m = sphere->get_material();
+      fprintf (stdout, "   Material:\n");
+      fprintf (stdout, "      Reflection:    %7.2f\n", m->get_reflection());
+      fprintf (stdout, "      RefractionIn:  %7.2f\n", m->get_refraction_in());
+      fprintf (stdout, "      RefractionOut: %7.2f\n", m->get_refraction_out());
+      fprintf (stdout, "      Transparency: %7.2f\n", m->get_transparency());
+      RGBColour c = m->get_colour();
+      fprintf (stdout, "      Colour:         %7.2f, %7.2f, %7.2f\n", c.get_red(), c.get_green(), c.get_blue());
+    }
+    fprintf (stdout, "\nPlanes:\n"); 
+    for (int i = 0; i < scene->get_number_of_planes(); plane++,i++) { 
+      fprintf (stdout, " Plane[%d]:\n", i); 
+      Vector v = plane->get_point(); 
+      fprintf (stdout, "   Point:         %7.2f, %7.2f, %7.2f\n", v.get_x(), v.get_y(), v.get_z());
+      v = plane->get_normal_vector(); 
+      fprintf (stdout, "   Normal Vector: %7.2f, %7.2f, %7.2f\n", v.get_x(), v.get_y(), v.get_z()); 
+      Material *m = plane->get_material();
+      fprintf (stdout, "   Material:\n");
+      fprintf (stdout, "      Reflection:    %7.2f\n", m->get_reflection());
+      fprintf (stdout, "      RefractionIn:  %7.2f\n", m->get_refraction_in());
+      fprintf (stdout, "      RefractionOut: %7.2f\n", m->get_refraction_out());
+      fprintf (stdout, "      Transparency: %7.2f\n", m->get_transparency());
+      RGBColour c = m->get_colour();
+      fprintf (stdout, "      Colour:         %7.2f, %7.2f, %7.2f\n", c.get_red(), c.get_green(), c.get_blue());
+    }
+    fprintf (stdout, "\nLights:\n"); 
+    for (int i = 0; i < scene->get_number_of_lights(); light++,i++) { 
+      fprintf (stdout, " Light[%d]:\n", i); 
+      Vector v = light->get_position(); 
+      fprintf (stdout, "   Position:         %7.2f, %7.2f, %7.2f\n", v.get_x(), v.get_y(), v.get_z());
+      RGBColour c = light->get_colour();
+      fprintf (stdout, "      Colour:         %7.2f, %7.2f, %7.2f\n", c.get_red(), c.get_green(), c.get_blue());
+    }
+#endif
     return 0;
   }
 
@@ -57,7 +82,7 @@ bool World::RenderScene(char* filename) {
   for (int y = 0; y < scene->get_height(); y++) {
     for (int x = 0; x < scene->get_width(); x++) {
       const double coef = 1.0;
-      const int depth = 3;
+      const int depth = 100;
       double t = 10000.0;
       RGBColour colour = scene->get_bgcolour();
       if (VIEWING_TYPE == ORTHOGRAPHIC) {
@@ -77,9 +102,9 @@ bool World::RenderScene(char* filename) {
 
       colour = colour.power(INV_GAMMA);
       colour = colour * 255.0;
-      colour.set_red(min(colour.get_red(), 0));
-      colour.set_green(min(colour.get_green(), 0));
-      colour.set_blue(min(colour.get_blue(), 0));
+      colour.set_red(min(colour.get_red(), 255.0));
+      colour.set_green(min(colour.get_green(), 255.0));
+      colour.set_blue(min(colour.get_blue(), 255.0));
 
       // Fill TGA image buffer
 
