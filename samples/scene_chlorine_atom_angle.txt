@@ -34,7 +34,7 @@ Scene
   ! Output image dimension with background color
   Width = 1024;
   Height = 768;
-  BGColor = 0.1, 0.1, 0.1;
+  BGColour = 0.1, 0.1, 0.1;
   ! Viewtypes:
   ! Orthographic = 0
   ! Perspective = 1
@@ -65,28 +65,28 @@ Material
 !  RefractionIn = 1.0;
 !  RefractionOut = 1.0;
   Transparency = 0.0;
-  Color = 1.0, 1.0, 0.0;
+  Colour = 1.0, 1.0, 0.0;
 }
 
 Material
 {
   Reflection = 0.0;
   Transparency = 0.0;
-  Color = 0.0, 1.0, 1.0;
+  Colour = 0.0, 1.0, 1.0;
 }
 
 Material
 {
   Reflection = 0.3;
   Transparency = 1.0;
-  Color = 1.0, 0.0, 1.0;
+  Colour = 1.0, 0.0, 1.0;
 }
 
 Material
 {
   Reflection = 0.3;
   Transparency = 1.0;
-  Color = 0.3, 0.3, 1.0;
+  Colour = 0.3, 0.3, 1.0;
 }
 
 ! Material for the plane as back wall
@@ -95,14 +95,14 @@ Material
 {
   Reflection = 0.0;
   Transparency = 0.0;
-  Color = 0.5, 0.5, 0.5;
+  Colour = 0.5, 0.5, 0.5;
 }
 
 Material
 {
   Reflection = 0.3;
   Transparency = 1.0;
-  Color = 0.3, 1.0, 0.3;
+  Colour = 0.3, 1.0, 0.3;
 }
 
 ! Elliptic path for sphere animation
@@ -557,19 +557,19 @@ Sphere
 Light
 {
   Position = 512.0, 384.0, -1000.0;
-  Color = 0.5, 0.5, 0.5;
+  Colour = 0.5, 0.5, 0.5;
 }
 
 ! Top middle
 Light
 {
   Position = 512.0, 768.0, -1000.0;
-  Color = 0.3, 0.3, 0.3;
+  Colour = 0.3, 0.3, 0.3;
 }
 
 ! Center middle
 Light
 {
   Position = 512.0, 384.0, 1000.0;
-  Color = 0.2, 0.2, 0.2;
+  Colour = 0.2, 0.2, 0.2;
 }

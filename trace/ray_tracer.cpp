@@ -31,7 +31,7 @@ bool RayTracer::RayTrace(Ray &ray, RGBColour &colour, double &t, double const& c
 
   colour = material->get_colour();
 
-  fprintf(stdout, "%.2f, %.2f, %.2f\n", colour.get_red(), colour.get_green(), colour.get_blue());
+  fprintf(stdout, "t: %.2f, .2f, colour: %.2f, %.2f, %.2f\n", t, colour.get_red(), colour.get_green(), colour.get_blue());
 
   return true;
 }

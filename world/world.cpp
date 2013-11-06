@@ -16,6 +16,27 @@ int World::Build(char* filename) {
     fprintf(stdout, "\nWorld::Build: Error Reading File %s\n", filename);
     return -1;
   } else {
+                Sphere *sphere = scene->get_spheres();
+                scene->Print();
+                fprintf (stdout, "\nSpheres:\n"); 
+                for (int i = 0; i < scene->get_number_of_spheres(); sphere++,i++) 
+                { 
+                        fprintf (stdout, " Sphere[%d]:\n", i); 
+                        Vector v = sphere->get_center(); 
+                        fprintf (stdout, "   Center:        %7.2f, %7.2f, %7.2f\n", v.get_x(), v.get_y(), v.get_z()); 
+                        fprintf (stdout, "   Radius:        %7.2f\n", sphere->get_radius()); 
+                        fprintf (stdout, "   StartAngle:    %7.2f\n", sphere->get_start_angle());
+                        Material *m = sphere->get_material();
+                        fprintf (stdout, "   Material:\n");
+                        fprintf (stdout, "      Reflection:    %7.2f\n", m->get_reflection());
+                        fprintf (stdout, "      RefractionIn:  %7.2f\n", m->get_refraction_in());
+                        fprintf (stdout, "      RefractionOut: %7.2f\n", m->get_refraction_out());
+                        fprintf (stdout, "      Transparency: %7.2f\n", m->get_transparency());
+                        RGBColour c = m->get_colour();
+                        fprintf (stdout, "      Color:         %7.2f, %7.2f, %7.2f\n", c.get_red(), c.get_green(), c.get_blue());
+                }
+
+
     return 0;
   }
 
