@@ -1,9 +1,12 @@
 #include <math.h>
 #include <time.h>
+#include <omp.h>
 #include "scene/scene.hpp"
 #include "world/world.hpp"
 
 int main(int argc, char* argv[]) {
+  omp_set_num_threads(THREADS);
+
   if (argc > 2) {
     World *world = new World();
     fprintf(stdout, "Scene file: %s\n", argv[1]);

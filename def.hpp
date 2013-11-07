@@ -12,6 +12,7 @@
 #define REFRACTION_OUT 1.25
 #define EPSILON 0.15
 
-#define DEBUG
+#define THREADS 4 
+//#define DEBUG
 
 #endif

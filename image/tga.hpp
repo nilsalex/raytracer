@@ -16,7 +16,7 @@ class TGA : public Image {
     int getline_(FILE *file, char line[]) const;
 
   public:
-    TGA(int const& bitmap, int const& type, int const& rowsp, int const& colsp, int const& count = 0);
+    TGA(int const& bitmap, int const& type, int const& rowsp, int const& colsp);
     ~TGA(void);
 //    void Read(char const* filename) const;
     void Write(char const* filename) const;

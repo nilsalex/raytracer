@@ -1,5 +1,7 @@
 #include <time.h>
 #include "world/world.hpp"
+#include <omp.h>
+#include <vector>
 
 World::World(void) {}
 
@@ -71,16 +73,20 @@ int World::Build(char* filename) {
 bool World::RenderScene(char* filename) {
   RayTracer *ray_tracer;
   ray_tracer = new RayTracer(scene);
-  // 24 bit RGB uncompressed TGA image
-  TGA *tga = new TGA (24, 2, scene->get_width(), scene->get_height());
-  double distance = DISTANCE;
+  double const distance = DISTANCE;
+  int const width = scene->get_width();
+  int const height = scene->get_height();
+
   Ray ray;
+
+  std::vector<RGBColour> buffer (width*height);
 
   int VIEWING_TYPE = scene->get_view_type();
   double ZOOM = 1.0 / scene->get_zoom();
   double INV_GAMMA = 1.0 / scene->get_gamma();
-  for (int y = 0; y < scene->get_height(); y++) {
-    for (int x = 0; x < scene->get_width(); x++) {
+  for (int y = 0; y < height; y++) {
+#pragma omp parallel for private (ray) shared(ray_tracer, buffer)
+    for (int x = 0; x < width; x++) {
       const double coef = 1.0;
       const int depth = 100;
       double t = 10000.0;
@@ -89,8 +95,8 @@ bool World::RenderScene(char* filename) {
         ray.set_origin(Vector(ZOOM * x, ZOOM * y, -distance));
         ray.set_direction(Vector(0.0, 0.0, distance));
       } else if (VIEWING_TYPE == PERSPECTIVE) {
-        ray.set_origin(Vector(scene->get_width() / 2.0, scene->get_height() / 2.0, -distance));
-        ray.set_direction(Vector(ZOOM * (x - scene->get_width() / 2.0 + 0.5), ZOOM * (y - scene->get_height() / 2.0 + 0.5), distance));
+        ray.set_origin(Vector(width / 2.0, height / 2.0, -distance));
+        ray.set_direction(Vector(ZOOM * (x - width / 2.0 + 0.5), ZOOM * (y - height / 2.0 + 0.5), distance));
       }
       Vector normalized_direction(ray.get_direction());
       normalized_direction.Normalize();
@@ -106,12 +112,17 @@ bool World::RenderScene(char* filename) {
       colour.set_green(min(colour.get_green(), 255.0));
       colour.set_blue(min(colour.get_blue(), 255.0));
 
-      // Fill TGA image buffer
-
-      tga->set_colour((int)colour.get_red(), (int)colour.get_green(), (int)colour.get_blue());
+      buffer[y * width + x] = colour;
     }
   }
 
+  // 24 bit RGB uncompressed TGA image
+  TGA * tga = new TGA (24, 2, scene->get_width(), scene->get_height());
+
+  // Fill TGA buffer
+  for (RGBColour colour : buffer) {
+    tga->set_colour(colour.get_red(), colour.get_green(), colour.get_blue());
+  }
   // Write TGA image buffer to file
   tga->Write(filename);
   delete(tga);

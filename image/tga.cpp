@@ -1,8 +1,8 @@
 #include "image/tga.hpp"
 
-TGA::TGA(int const& bitmap, int const& type, int const& rows, int const& cols, int const& count)
+TGA::TGA(int const& bitmap, int const& type, int const& rows, int const& cols)
   : colour_(new Colour[rows * cols]),
-    bitmap_(bitmap), type_(type), rows_(rows), cols_(cols), count_(count) {}
+    bitmap_(bitmap), type_(type), rows_(rows), cols_(cols), count_(0) {}
 
 TGA::~TGA(void) {
   delete colour_;

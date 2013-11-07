@@ -1,7 +1,7 @@
 CXX = g++
 OPT = -ggdb -march=corei7
-CFLAGS = $(OPT) -Wall -Wextra -pedantic -std=gnu++0x
-LDFLAGS =
+CFLAGS = $(OPT) -Wall -Wextra -pedantic -std=gnu++0x -fopenmp
+LDFLAGS = -lgomp
 INCLUDE = -I. 
 
 _OBJECTS = main.o world.o ray_tracer.o scene.o sphere.o plane.o shape.o light.o vector.o ray.o rgb_colour.o material.o tga.o parse.o
