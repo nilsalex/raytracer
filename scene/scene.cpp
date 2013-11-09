@@ -397,7 +397,7 @@ char* Scene::ReadPlane_(char* buffer) {
         if (!strcmp(temp_buf, "NormalVector")) {
           plane_->set_normal_vector(Vector(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]));
         }
-        break; // Path!
+        break;
       case 'M':
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
@@ -413,6 +413,23 @@ char* Scene::ReadPlane_(char* buffer) {
             plane_->set_material(material_);
           }
           material_ -= value;
+        }
+        break;
+      case 'G':
+        sscanf(buffer, "%s", temp_buf);
+        count_ += strlen(temp_buf);
+        buffer += strlen(temp_buf);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
+        if (!strcmp(temp_buf, "GridOrientation")) {
+          Vector orientation(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]);
+          if (orientation * orientation != 0) {
+            orientation.Normalize();
+          }
+          plane_->set_grid_orientation(orientation);
+        } else if (!strcmp(temp_buf, "GridWidth")) {
+          plane_->set_grid_width(parse_->Digit.v[0]);
+        } else if (!strcmp(temp_buf, "GridThickness")) {
+          plane_->set_grid_thickness(parse_->Digit.v[0]);
         }
         break;
       default:

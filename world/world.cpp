@@ -88,7 +88,7 @@ bool World::RenderScene(char* filename) {
 #pragma omp parallel for private (ray) shared(ray_tracer, buffer)
     for (int x = 0; x < width; x++) {
       const double coef = 1.0;
-      const int depth = 100;
+      const int depth = 10;
       double t = 10000.0;
       RGBColour colour = scene->get_bgcolour();
       if (VIEWING_TYPE == ORTHOGRAPHIC) {

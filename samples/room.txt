@@ -1,0 +1,104 @@
+!-----------------------------------------
+!                Scene
+!-----------------------------------------
+Scene
+{
+  ! Version
+  Version = 1;
+  ! Output image dimension with background color
+  Width = 4096;
+  Height = 3072;
+  BGColour = 0.0, 0.0, 0.0;
+  ! Viewtypes:
+  ! Orthographic = 0
+  ! Perspective = 1
+  ! Any other number should be changed to default
+  ViewType = 1;
+  ! Zoom ranges from 0.0 and up where
+  ! 0.0 --> nothing
+  ! 1.0 --> no zoom
+  ! 2.0 --> double the size
+  ! 0.5 --> half the size
+  Zoom = 1.0;
+  Gamma = 1.5;
+
+  ! Count the number of objects in the scene
+  NumberOfMaterials = 3;
+  NumberOfSpheres = 1;
+  NumberOfPlanes = 4;
+  NumberOfLights = 1;
+}
+
+!-----------------------------------------
+!            List of materials
+!-----------------------------------------
+Material
+{
+  Reflection = 0.2;
+!  RefractionIn = 1.0;
+!  RefractionOut = 1.0;
+  Transparency = 0.0;
+  Colour = 1.0, 0.0, 0.0;
+}
+
+Material
+{
+  Reflection = 0.2;
+  Transparency = 0.0;
+  Colour = 1.0, 1.0, 1.0;
+}
+
+Material
+{
+  Reflection = 1.0;
+  Transparency = 0.0;
+  Colour = 1.0, 1.0, 1.0;
+}
+
+!-----------------------------------------
+!         List of planes
+!-----------------------------------------
+Plane
+{
+  Point = 0.0, -1000.0, 0.0;
+  NormalVector = 0.0, 1.0, 0.0;
+  Material.Id = 1;
+}
+Plane
+{
+  Point = 1181.97, 0.0, -1000.0;
+  NormalVector = 0.87, 0.0, 0.5;
+  Material.Id = 0;
+}
+Plane
+{
+  Point = 2548.0, 0.0, 866.0;
+  NormalVector = -0.5, 0.0, 0.87;
+  Material.Id = 1;
+}
+Plane
+{
+  Point = 0.0, 1000.0, 0.0;
+  NormalVector = 0.0, -1.0, 0.0;
+  Material.Id = 1;
+}
+
+!-----------------------------------------
+!            List of spheres
+!-----------------------------------------
+Sphere
+{
+  Center = 0.0, 0.0, 0.0;
+  Radius = 300.0;
+  Material.Id = 2;
+  StartAngle = 0.0;
+}
+
+!-----------------------------------------
+!         List of lights
+!-----------------------------------------
+Light
+{
+  Position = 500.0, 500.0, 100.0;
+  Colour = 0.5, 0.5, 0.5;
+}
