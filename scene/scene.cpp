@@ -372,6 +372,11 @@ char* Scene::ReadPlane_(char* buffer) {
           error_number_ = 101;
         }
         done = 1;
+        if (plane_->get_grid_orientation_1() * plane_->get_grid_orientation_1() > 0.0 &&
+            plane_->get_grid_orientation_2() * plane_->get_grid_orientation_2() > 0.0 &&
+            plane_->get_grid_width() > 0.0 && plane_->get_grid_thickness() > 0.0) {
+          plane_->has_grid = true;
+        }
         objects[shape_read_] = (int *)plane_;
         plane_++;
         break;
@@ -420,16 +425,32 @@ char* Scene::ReadPlane_(char* buffer) {
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
         buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
-        if (!strcmp(temp_buf, "GridOrientation")) {
+        if (!strcmp(temp_buf, "GridOrientation.1")) {
           Vector orientation(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]);
           if (orientation * orientation != 0) {
             orientation.Normalize();
           }
-          plane_->set_grid_orientation(orientation);
+          plane_->set_grid_orientation_1(orientation);
+        } else if (!strcmp(temp_buf, "GridOrientation.2")) {
+          Vector orientation(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]);
+          if (orientation * orientation != 0) {
+            orientation.Normalize();
+          }
+          plane_->set_grid_orientation_2(orientation);
         } else if (!strcmp(temp_buf, "GridWidth")) {
           plane_->set_grid_width(parse_->Digit.v[0]);
         } else if (!strcmp(temp_buf, "GridThickness")) {
           plane_->set_grid_thickness(parse_->Digit.v[0]);
+        } else if (!strcmp(temp_buf, "GridMaterial.Id")) {
+          int value = int(parse_->Digit.v[0]);
+          material_ += value;
+          if (value >= number_of_materials_) {
+            fprintf(stdout, "\nScene::ReadPlane_: Error: Wrong material ID in Component 'Plane' in file %s\n", filename_);
+            error_number_ = 101;
+          } else {
+            plane_->set_grid_material(material_);
+          }
+          material_ -= value;
         }
         break;
       default:

@@ -3,12 +3,12 @@ Scene
   Version = 1;
   Width = 4096;
   Height = 3072;
-  BGColour = 0.01, 0.01, 0.01;
+  BGColour = 0.0, 0.0, 0.0;
   ViewType = 1;
   Zoom = 1.0;
   Gamma = 1.5;
 
-  NumberOfMaterials = 3;
+  NumberOfMaterials = 4;
   NumberOfPlanes = 1;
   NumberOfSpheres = 2; 
   NumberOfLights = 1;
@@ -35,14 +35,23 @@ Material
   Colour = 0.3, 0.3, 0.3;
 }
 
+Material
+{
+  Reflection = 0.0;
+  Transparency = 0.0;
+  Colour = 0.0, 0.0, 0.0;
+}
+
 Plane
 {
-  Point = 0.0, 700.0, 0.0;
+  Point = 0.0, 400.0, 0.0;
   NormalVector = 0.0, 1.0, 0.0;
   Material.Id = 2;
-  GridOrientation = 1.0, 0.0, 0.0;
-  GridWidth = 100;
-  GridThickness = 10;
+!  GridOrientation.1 = 1.0, 0.0, 0.0;
+!  GridOrientation.2 = 0.0, 0.0, 1.0;
+!  GridWidth = 400;
+!  GridThickness = 40;
+!  GridMaterial.Id = 3;
 } 
 
 Sphere
@@ -59,24 +68,6 @@ Sphere
   Material.Id = 1;
   StartAngle = 0.0;
 }
-
-!Light
-!{
-!  Position = 0.0, 3072.0, 2000.0;
-!  Colour = 1.0, 1.0, 1.0;
-!}
-
-!Light
-!{
-!  Position = 4096.0, 3072.0, 2000;
-!  Colour = 1.0, 1.0, 1.0;
-!}
-
-!Light
-!{
-!  Position = 0.0, 3072.0, -2000.0;
-!  Colour = 1.0, 1.0, 1.0;
-!}
 
 Light
 {

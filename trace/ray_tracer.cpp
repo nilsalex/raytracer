@@ -27,7 +27,8 @@ bool RayTracer::RayTrace(Ray &ray, RGBColour &colour, double &t, double const& c
     return false;
   }
 
-  Material *material = object_hit->get_material();
+//  Material *material = object_hit->get_material();
+  Material *material = ray.hit_info.material;
 
 #ifdef CASTING_ONLY
   colour = material->get_colour();
@@ -77,7 +78,7 @@ bool RayTracer::RayTrace(Ray &ray, RGBColour &colour, double &t, double const& c
   // next reflection
   double reflection = material->get_reflection();
   if (reflection > 0.0 && depth > 0) {
-    double t1 = 10000.0;
+    double t1 = DEFAULT_T;
     RGBColour clr = scene->get_bgcolour();
     RayTrace(reflected_ray, clr, t1, (coef * reflection), depth - 1);
     colour = colour + clr * reflection;
@@ -96,7 +97,7 @@ bool RayTracer::RayTrace(Ray &ray, RGBColour &colour, double &t, double const& c
     // total reflection
     Vector direction = ray.get_direction();
     if (refract_(ray.hit_info.normal, direction, refraction_in, refraction_out)) {
-      double t1 = 10000.0;
+      double t1 = DEFAULT_T;
       RGBColour clr = scene->get_bgcolour();
       Ray refracted_ray = Ray(ray.hit_info.position + direction * EPSILON, direction);
       if (RayTrace(refracted_ray, clr, t1, (coef * refraction), depth-1)) {
@@ -113,7 +114,7 @@ bool RayTracer::RayTrace(Ray &ray, RGBColour &colour, double &t, double const& c
 
     // no total reflection
     else {
-      double t1 = 10000.0;
+      double t1 = DEFAULT_T;
       RGBColour clr = scene->get_bgcolour();
       Ray refracted_ray = Ray(ray.hit_info.position + direction * EPSILON, direction);
       if (RayTrace(refracted_ray, clr, t1, (coef * refraction), depth-1)) {

@@ -89,7 +89,7 @@ bool World::RenderScene(char* filename) {
     for (int x = 0; x < width; x++) {
       const double coef = 1.0;
       const int depth = 10;
-      double t = 10000.0;
+      double t = DEFAULT_T;
       RGBColour colour = scene->get_bgcolour();
       if (VIEWING_TYPE == ORTHOGRAPHIC) {
         ray.set_origin(Vector(ZOOM * x, ZOOM * y, -distance));
