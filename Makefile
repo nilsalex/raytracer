@@ -4,7 +4,7 @@ CFLAGS = $(OPT) -Wall -Wextra -pedantic -std=gnu++0x -fopenmp
 LDFLAGS = -lgomp
 INCLUDE = -I. 
 
-_OBJECTS = main.o world.o ray_tracer.o scene.o sphere.o plane.o shape.o light.o vector.o ray.o rgb_colour.o material.o tga.o parse.o
+_OBJECTS = main.o world.o ray_tracer.o scene.o sphere.o tiled_plane.o plane.o shape.o light.o vector.o ray.o rgb_colour.o material.o tga.o parse.o
 OBJECTS = $(patsubst %,$(ODIR)/%,$(_OBJECTS))
 
 OUT = .
@@ -39,6 +39,10 @@ sphere.o:
 plane.o:
 	mkdir -p $(ODIR)
 	$(CXX) -c $(CFLAGS) $(INCLUDE) $< -o $(ODIR)/$@ $(SDIR)/shape/plane.cpp
+
+tiled_plane.o:
+	mkdir -p $(ODIR)
+	$(CXX) -c $(CFLAGS) $(INCLUDE) $< -o $(ODIR)/$@ $(SDIR)/shape/tiled_plane.cpp
 
 shape.o:
 	mkdir -p $(ODIR)

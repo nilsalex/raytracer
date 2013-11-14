@@ -21,11 +21,12 @@ Scene::Scene(char* filename) {
       number_of_materials_ = 0;
       number_of_spheres_ = 0;
       number_of_planes_ = 0;
+      number_of_tiled_planes_ = 0;
       number_of_lights_ = 0;
       parse_ = new Parse();
       parse_->Digit.n = 0;
       parse_->Digit.v[0] = parse_->Digit.v[1] = parse_->Digit.v[2] = 0;
-      shape_read_ = sphere_read_ = plane_read_ = light_read_ = material_read_ = 0; // = path_read_
+      shape_read_ = sphere_read_ = plane_read_ = tiled_plane_read_= light_read_ = material_read_ = 0; // = path_read_
     }
   }
 }
@@ -118,6 +119,19 @@ int Scene::Read(void) {
           }
         }
         break;
+      case 'T':
+        sscanf(buffer, "%s", temp_buf);
+        count_ += strlen(temp_buf);
+        buffer += strlen(temp_buf);
+        if (scene_read_ && material_read_ == number_of_materials_) {
+          // Path...
+          if (!strcmp(temp_buf, "TiledPlane") && tiled_plane_read_ < number_of_tiled_planes_) {
+            buffer = ReadTiledPlane_(buffer);
+            tiled_plane_read_++;
+            shape_read_++;
+          }
+        }
+        break;
       default:
         count_++;
         buffer++;
@@ -140,6 +154,12 @@ int Scene::Read(void) {
     error_number_ = 102;
   }
 
+  if (tiled_plane_read_ == number_of_tiled_planes_) {
+    tiled_plane_ -= number_of_tiled_planes_;
+  } else {
+    error_number_ = 102;
+  }
+
   if (light_read_ == number_of_lights_) {
     light_ -= number_of_lights_;
   } else {
@@ -147,8 +167,8 @@ int Scene::Read(void) {
   }
 
   if (error_number_ > 0) {
-    fprintf(stdout, "SPHERES      %d, PLANES      %d, LIGHTS      %d, MATERIALS      %d\n", number_of_spheres_, number_of_planes_, number_of_lights_, number_of_materials_);
-    fprintf(stdout, "SPHERES_READ %d, PLANES_READ %d, LIGHTS_READ %d, MATERIALS_READ %d", sphere_read_, plane_read_, light_read_, material_read_);
+    fprintf(stdout, "SPHERES      %d, PLANES      %d, TILED_PlANES      %d, LIGHTS      %d, MATERIALS      %d\n", number_of_spheres_, number_of_planes_, number_of_tiled_planes_, number_of_lights_, number_of_materials_);
+    fprintf(stdout, "SPHERES_READ %d, PLANES_READ %d, TILED_PLANES_READ %d, LIGHTS_READ %d, MATERIALS_READ %d", sphere_read_, plane_read_, tiled_plane_read_, light_read_, material_read_);
     return -1;
   }
 
@@ -257,6 +277,8 @@ char* Scene::ReadScene_(char *buffer) {
           number_of_spheres_ = parse_->Digit.v[0];
         } else if (!strcmp(temp_buf, "NumberOfPlanes")) {
           number_of_planes_ = parse_->Digit.v[0];
+        } else if (!strcmp(temp_buf, "NumberOfTiledPlanes")) {
+          number_of_tiled_planes_ = parse_->Digit.v[0];
         } else if (!strcmp(temp_buf, "NumberOfLights")) {
           number_of_lights_ = parse_->Digit.v[0];
         } // Paths!
@@ -372,11 +394,6 @@ char* Scene::ReadPlane_(char* buffer) {
           error_number_ = 101;
         }
         done = 1;
-        if (plane_->get_grid_orientation_1() * plane_->get_grid_orientation_1() > 0.0 &&
-            plane_->get_grid_orientation_2() * plane_->get_grid_orientation_2() > 0.0 &&
-            plane_->get_grid_width() > 0.0 && plane_->get_grid_thickness() > 0.0) {
-          plane_->has_grid = true;
-        }
         objects[shape_read_] = (int *)plane_;
         plane_++;
         break;
@@ -420,37 +437,97 @@ char* Scene::ReadPlane_(char* buffer) {
           material_ -= value;
         }
         break;
-      case 'G':
+      default:
+        count_++;
+        buffer++;
+        break;
+    }
+    if (done == 1 || error_number_ > 0) {
+      break;
+    }
+  }
+
+  return buffer;
+}
+
+char* Scene::ReadTiledPlane_(char* buffer) {
+  char temp_buf[1024];
+  char start = 0, done = 0;
+  while (1) {
+    switch (*buffer) {
+      case '!':
+        buffer = parse_->ReadComment (count_, buffer);
+        break;
+      case '}':
+        count_++;
+        buffer++;
+        if (start != 1) {
+          fprintf(stdout, "\nScene::ReadTiledPlane_: Syntax Error: Missing '{' in Component 'TiledPlane' in file %s\n", filename_);
+          error_number_ = 101;
+        }
+        done = 1;
+        objects[shape_read_] = (int *)tiled_plane_;
+        tiled_plane_++;
+        break;
+      case '{':
+        count_++;
+        buffer++;
+        start = 1;
+        break;
+      case 'P':
         sscanf(buffer, "%s", temp_buf);
         count_ += strlen(temp_buf);
         buffer += strlen(temp_buf);
         buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
-        if (!strcmp(temp_buf, "GridOrientation.1")) {
-          Vector orientation(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]);
-          if (orientation * orientation != 0) {
-            orientation.Normalize();
-          }
-          plane_->set_grid_orientation_1(orientation);
-        } else if (!strcmp(temp_buf, "GridOrientation.2")) {
-          Vector orientation(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]);
-          if (orientation * orientation != 0) {
-            orientation.Normalize();
-          }
-          plane_->set_grid_orientation_2(orientation);
-        } else if (!strcmp(temp_buf, "GridWidth")) {
-          plane_->set_grid_width(parse_->Digit.v[0]);
-        } else if (!strcmp(temp_buf, "GridThickness")) {
-          plane_->set_grid_thickness(parse_->Digit.v[0]);
-        } else if (!strcmp(temp_buf, "GridMaterial.Id")) {
+        if (!strcmp(temp_buf, "Point")) {
+          tiled_plane_->set_point(Vector(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]));
+        }
+        break; // Path!
+      case 'N':
+        sscanf(buffer, "%s", temp_buf);
+        count_ += strlen(temp_buf);
+        buffer += strlen(temp_buf);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
+        if (!strcmp(temp_buf, "NormalVector")) {
+          tiled_plane_->set_normal_vector(Vector(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]));
+        }
+        break;
+      case 'M':
+        sscanf(buffer, "%s", temp_buf);
+        count_ += strlen(temp_buf);
+        buffer += strlen(temp_buf);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
+        if (!strcmp(temp_buf, "Material.Id")) {
           int value = int(parse_->Digit.v[0]);
           material_ += value;
           if (value >= number_of_materials_) {
-            fprintf(stdout, "\nScene::ReadPlane_: Error: Wrong material ID in Component 'Plane' in file %s\n", filename_);
+            fprintf(stdout, "\nScene::ReadTiledPlane_: Error: Wrong material ID in Component 'TiledPlane' in file %s\n", filename_);
             error_number_ = 101;
           } else {
-            plane_->set_grid_material(material_);
+            tiled_plane_->set_material(material_);
           }
           material_ -= value;
+        } else if (!strcmp(temp_buf, "MaterialT.Id")) {
+          int value = int(parse_->Digit.v[0]);
+          material_ += value;
+          if (value >= number_of_materials_) {
+            fprintf(stdout, "\nScene::ReadTiledPlane_: Error: Wrong material ID in Component 'TiledPlane' in file %s\n", filename_);
+            error_number_ = 101;
+          } else {
+            tiled_plane_->set_material_t(material_);
+          }
+          material_ -= value;
+        }
+        break;
+      case 'U':
+        sscanf(buffer, "%s", temp_buf);
+        count_ += strlen(temp_buf);
+        buffer += strlen(temp_buf);
+        buffer = parse_->ReadDigits(count_, buffer, error_number_, filename_);
+        if (!strcmp(temp_buf, "Unit.1")) {
+          tiled_plane_->set_unit_1(Vector(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]));
+        } else if (!strcmp(temp_buf, "Unit.2")) {
+          tiled_plane_->set_unit_2(Vector(parse_->Digit.v[0], parse_->Digit.v[1], parse_->Digit.v[2]));
         }
         break;
       default:
@@ -632,6 +709,10 @@ int Scene::get_number_of_planes(void) const {
   return number_of_planes_;
 }
 
+int Scene::get_number_of_tiled_planes(void) const {
+  return number_of_tiled_planes_;
+}
+
 int Scene::get_number_of_lights(void) const {
   return number_of_lights_;
 }
@@ -644,6 +725,10 @@ Sphere* Scene::get_spheres(void) {
 
 Plane* Scene::get_planes(void) {
   return plane_;
+}
+
+TiledPlane* Scene::get_tiled_planes(void) {
+  return tiled_plane_;
 }
 
 Light* Scene::get_lights(void) {
@@ -668,6 +753,7 @@ void Scene::Print(void) const {
 //  fprintf (stdout, "NumberOfPaths      = %5d\n", number_of_paths_);
   fprintf (stdout, "NumberOfSpheres    = %5d\n", number_of_spheres_);
   fprintf (stdout, "NumberOfPlanes     = %5d\n", number_of_planes_);
+  fprintf (stdout, "NumberOfTiledPlanes     = %5d\n", number_of_tiled_planes_);
   fprintf (stdout, "NumberOfLights     = %5d\n", number_of_lights_);
 }
 

@@ -9,7 +9,8 @@ Scene
   Gamma = 1.5;
 
   NumberOfMaterials = 4;
-  NumberOfPlanes = 1;
+  NumberOfPlanes = 0;
+  NumberOfTiledPlanes = 1;
   NumberOfSpheres = 2; 
   NumberOfLights = 1;
 }
@@ -42,16 +43,14 @@ Material
   Colour = 0.0, 0.0, 0.0;
 }
 
-Plane
+TiledPlane
 {
   Point = 0.0, 400.0, 0.0;
   NormalVector = 0.0, 1.0, 0.0;
   Material.Id = 2;
-!  GridOrientation.1 = 1.0, 0.0, 0.0;
-!  GridOrientation.2 = 0.0, 0.0, 1.0;
-!  GridWidth = 400;
-!  GridThickness = 40;
-!  GridMaterial.Id = 3;
+  Unit.1 = 20.0, 0.0, 0.0;
+  Unit.2 = 0.0, 0.0, 20.0;
+  MaterialT.Id = 3;
 } 
 
 Sphere

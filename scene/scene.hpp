@@ -12,6 +12,7 @@
 //#include "path/path.hpp"
 #include "shape/shape.hpp"
 #include "shape/plane.hpp"
+#include "shape/tiled_plane.hpp"
 #include "shape/sphere.hpp"
 #include "scene/parse.hpp"
 
@@ -28,10 +29,12 @@ class Scene {
 //    int number_of_paths_;
     int number_of_spheres_;
     int number_of_planes_;
+    int number_of_tiled_planes_;
     int number_of_lights_;
 
     Sphere *sphere_;
     Plane *plane_;
+    TiledPlane *tiled_plane_;
     Material *material_;
 //    Path *path_;
     Light *light_;
@@ -41,11 +44,12 @@ class Scene {
     FILE *file_;
     char *filename_;
     int shape_read_;
-    int scene_read_, sphere_read_, plane_read_, light_read_, material_read_; // path_read_;
+    int scene_read_, sphere_read_, plane_read_, tiled_plane_read_, light_read_, material_read_; // path_read_;
 
     char* ReadScene_(char *buffer);
     char* ReadSphere_(char *buffer);
     char* ReadPlane_(char *buffer);
+    char* ReadTiledPlane_(char *buffer);
     char* ReadLight_(char *buffer);
     char* ReadMaterial_(char *buffer);
     char* ReadPath_(char *buffer);
@@ -70,11 +74,13 @@ class Scene {
     int get_number_of_spheres(void) const;
 //    int get_number_of_paths(void) const;
     int get_number_of_planes(void) const;
+    int get_number_of_tiled_planes(void) const;
     int get_number_of_lights(void) const;
 
     Sphere* get_spheres(void);
 //  Path* get_paths(void);
     Plane* get_planes(void);
+    TiledPlane* get_tiled_planes(void);
     Light* get_lights(void);
 
     void Print(void) const;
